@@ -1,0 +1,17 @@
+{
+    "admin": {
+        "pass": "admin123",
+        "role": "admin",
+        "name": "Administrador"
+    },
+    "gerente": {
+        "pass": "Pato234",
+        "role": "manager",
+        "name": "Gerente General"
+    },
+    "jorge": {
+        "pass": "jorge123",
+        "role": "warehouse",
+        "name": "Jorge Alfonso"
+    }
+}

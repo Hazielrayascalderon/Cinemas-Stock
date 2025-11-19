@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinemas WTC - Sistema de Proveedores</title>
+    <link rel="icon" href="logos/logo.png" type="image/png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="welcome-container">
+        <div class="welcome-box">
+            <h1 class="mb-3 logo-title"><i class="fas fa-film me-2"></i>Bienvenido a Cinemas WTC</h1>
+            <p class="lead text-light mb-4">Sistema de Gestión de Proveedores e Inventario</p>
+            
+            <div class="video-wrapper mb-4">
+                <video width="100%" controls>
+                    <source src="1758210418538.mp4" type="video/mp4">
+                    Tu navegador no soporta el tag de video.
+                </video>
+            </div>
+            
+            <button class="btn btn-primary btn-lg" id="goToLoginButton">
+                Comenzar <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="login-container" style="display: none;">
+        <div class="login-card text-center">
+            <h2 class="mb-2 logo-title"><i class="fas fa-film me-2"></i>Cinemas WTC</h2>
+            <p class="text-muted mb-4">Sistema de Gestión de Proveedores</p>
+            <form id="loginForm">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="username" placeholder="Usuario" required>
+                    <label for="username">Usuario</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="password" placeholder="Contraseña" required>
+                    <label for="password">Contraseña</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2">Ingresar</button>
+            </form>
+            <div id="loginError" class="text-danger mt-3" style="display: none;">Usuario o contraseña incorrectos.</div>
+        </div>
+    </div>
+
+    <div id="app-container" style="display: none;">
+        
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#"><i class="fas fa-film me-2"></i>Cinemas WTC</a>
+                <div class="navbar-nav ms-auto d-flex align-items-center">
+                    <span class="navbar-text me-3" id="currentDateTime"></span>
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle fa-lg me-2"></i>
+                            <div id="nav-user-info">
+                                <strong id="nav-username"></strong>
+                                <small class="d-block" id="nav-user-role"></small>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#" id="logoutButton"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="banner-container">
+            <div class="banner-text">
+                CINEMAS WTC - SISTEMA DE GESTIÓN DE PROVEEDORES - CINEMAS WTC
+            </div>
+        </div>
+        
+        <div id="alertPlaceholder" style="position: fixed; top: 70px; right: 20px; z-index: 1055; min-width: 300px;"></div>
+
+        <div class="container mt-4">
+            <div id="stockAlerts"></div>
+
+            <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="appointments-tab" data-bs-toggle="tab" data-bs-target="#appointments" type="button">
+                        <i class="fas fa-calendar-alt me-2"></i>Citas
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="suppliers-tab" data-bs-toggle="tab" data-bs-target="#suppliers" type="button">
+                        <i class="fas fa-truck me-2"></i>Proveedores
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory" type="button">
+                        <i class="fas fa-boxes me-2"></i>Inventario
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="employees-tab" data-bs-toggle="tab" data-bs-target="#employees" type="button">
+                        <i class="fas fa-users me-2"></i>Empleados
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="forms-tab" data-bs-toggle="tab" data-bs-target="#forms" type="button">
+                        <i class="fas fa-file-alt me-2"></i>Formularios
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button">
+                        <i class="fas fa-chart-bar me-2"></i>Reportes
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="admin-tools-tab" data-bs-toggle="tab" data-bs-target="#admin-tools" type="button" role="tab" aria-controls="admin-tools" aria-selected="false">
+                        <i class="fas fa-shield-alt me-2"></i>Admin
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="mainTabsContent">
+                
+                <div class="tab-pane fade show active" id="appointments" role="tabpanel">
+                    <div class="row mt-4">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Agendar Nueva Cita</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="appointmentForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Proveedor</label>
+                                                <select class="form-select" id="supplierSelect" required></select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Fecha</label>
+                                                <input type="date" class="form-control" id="appointmentDate" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Horarios Disponibles</label>
+                                            <div id="timeSlots" class="d-flex flex-wrap gap-2"></div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tipo de Entrega</label>
+                                            <select class="form-select" id="deliveryType" required>
+                                                <option value="">Seleccionar tipo...</option>
+                                                <option value="dulces">Dulces y Confitería</option>
+                                                <option value="bebidas">Bebidas</option>
+                                                <option value="palomitas">Palomitas y Snacks</option>
+                                                <option value="materia_prima">Materia Prima</option>
+                                                <option value="mantenimiento">Mantenimiento</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Descripción</label>
+                                            <textarea class="form-control" id="appointmentDescription" rows="3"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-2"></i>Agendar Cita
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="fas fa-clock me-2"></i>Horarios Bloqueados</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="small text-muted mb-2">
+                                        <strong>Horarios no disponibles:</strong>
+                                    </div>
+                                    <ul class="list-unstyled small">
+                                        <li><i class="fas fa-times-circle text-danger me-1"></i>12:00 - 14:00 (Almuerzo)</li>
+                                        <li><i class="fas fa-times-circle text-danger me-1"></i>18:00 - 22:00 (Funciones)</li>
+                                        <li><i class="fas fa-times-circle text-danger me-1"></i>Domingos después 16:00</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="fas fa-list me-2"></i>Citas del Día</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="todayAppointments"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="suppliers" role="tabpanel">
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-plus me-2"></i>Nuevo Proveedor</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="supplierForm">
+                                        <div class="mb-3">
+                                            <label class="form-label">Nombre de la Empresa</label>
+                                            <input type="text" class="form-control" id="supplierName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Contacto</label>
+                                            <input type="text" class="form-control" id="supplierContact" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Teléfono</label>
+                                            <input type="tel" class="form-control" id="supplierPhone" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="supplierEmail" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Especialidad</label>
+                                            <select class="form-select" id="supplierSpecialty" required>
+                                                <option value="">Seleccionar...</option>
+                                                <option value="dulces">Dulces y Confitería</option>
+                                                <option value="bebidas">Bebidas</option>
+                                                <option value="palomitas">Palomitas y Snacks</option>
+                                                <option value="materia_prima">Materia Prima</option>
+                                                <option value="mantenimiento">Mantenimiento</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-save me-2"></i>Guardar Proveedor
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Lista de Proveedores</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <input type="search" id="supplierSearchInput" class="form-control" placeholder="Buscar por nombre o contacto...">
+                                    </div>
+                                    <div id="suppliersList"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="inventory" role="tabpanel">
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <ul class="nav nav-pills card-header-pills">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-bs-toggle="pill" href="#inv-general"><i class="fas fa-globe me-2"></i>Stock General</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="pill" href="#inv-bar"><i class="fas fa-cocktail me-2"></i>Bar</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="pill" href="#inv-cafeteria"><i class="fas fa-coffee me-2"></i>Cafetería</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="pill" href="#inv-dulceria"><i class="fas fa-candy-cane me-2"></i>Dulcería</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="pill" href="#inv-cocina"><i class="fas fa-utensils me-2"></i>Cocina</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="inv-general">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <input type="search" id="search-general" class="form-control w-75" placeholder="Buscar en todo el inventario (por nombre, área o categoría)...">
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr><th>Área</th><th>Producto</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Acciones</th></tr>
+                                            </thead>
+                                            <tbody id="general-inventory-body"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="inv-bar">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <input type="search" id="search-bar" class="form-control w-50" placeholder="Buscar en Bar...">
+                                        <button class="btn btn-primary" onclick="openInventoryModal('bar')">
+                                            <i class="fas fa-plus me-2"></i>Agregar a Bar
+                                        </button>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr><th>Producto</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Acciones</th></tr>
+                                            </thead>
+                                            <tbody id="bar-inventory-body"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="inv-cafeteria">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <input type="search" id="search-cafeteria" class="form-control w-50" placeholder="Buscar en Cafetería...">
+                                        <button class="btn btn-primary" onclick="openInventoryModal('cafeteria')">
+                                            <i class="fas fa-plus me-2"></i>Agregar a Cafetería
+                                        </button>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr><th>Producto</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Acciones</th></tr>
+                                            </thead>
+                                            <tbody id="cafeteria-inventory-body"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="inv-dulceria">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <input type="search" id="search-dulceria" class="form-control w-50" placeholder="Buscar en Dulcería...">
+                                        <button class="btn btn-primary" onclick="openInventoryModal('dulceria')">
+                                            <i class="fas fa-plus me-2"></i>Agregar a Dulcería
+                                        </button>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr><th>Producto</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Acciones</th></tr>
+                                            </thead>
+                                            <tbody id="dulceria-inventory-body"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="inv-cocina">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <input type="search" id="search-cocina" class="form-control w-50" placeholder="Buscar en Cocina...">
+                                        <button class="btn btn-primary" onclick="openInventoryModal('cocina')">
+                                            <i class="fas fa-plus me-2"></i>Agregar a Cocina
+                                        </button>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr><th>Producto</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>Acciones</th></tr>
+                                            </thead>
+                                            <tbody id="cocina-inventory-body"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="employees" role="tabpanel">
+                    <div class="card mt-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-users me-2"></i>Gestión de Empleados (Salario: $45/hora)</h5>
+                            <button class="btn btn-primary" onclick="openEmployeeModal()">
+                                <i class="fas fa-user-plus me-2"></i>Agregar Empleado
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-end gap-2 mb-3">
+                                <small class="text-muted align-self-center">Ordenar por:</small>
+                                <button class="btn btn-sm btn-outline-secondary" id="sortByName">Nombre</button>
+                                <button class="btn btn-sm btn-outline-secondary" id="sortByHoursDesc">Más Horas</button>
+                                <button class="btn btn-sm btn-outline-secondary" id="sortByHoursAsc">Menos Horas</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Puesto</th>
+                                            <th>Horas/Mes</th>
+                                            <th>Salario Estimado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="employeesTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="forms" role="tabpanel">
+                    <div class="row mt-4">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Reporte de Mantenimiento</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="maintenanceForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Área</label>
+                                                <select class="form-select" id="maintArea" required>
+                                                    <option value="">Seleccionar área...</option>
+                                                    <option value="proyeccion">Proyección</option>
+                                                    <option value="sonido">Sonido</option>
+                                                    <option value="dulceria">Equipos Dulcería</option>
+                                                    <option value="cocina">Equipos Cocina</option>
+                                                    <option value="sala">Butacas/Sala</option>
+                                                    <option value="sanitarios">Sanitarios</option>
+                                                    <option value="general">General</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Nivel de Urgencia</label>
+                                                <select class="form-select" id="maintUrgency" required>
+                                                    <option value="baja">Baja</option>
+                                                    <option value="media">Media</option>
+                                                    <option value="alta">Alta</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Descripción del Problema</label>
+                                            <textarea class="form-control" id="maintDescription" rows="4" required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane me-2"></i>Enviar Reporte
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header"><h6 class="mb-0">Reportes Recientes</h6></div>
+                                <div class="card-body" id="recentMaintenanceReports">
+                                    <p class="text-muted small">No hay reportes recientes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="reports" role="tabpanel">
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fas fa-file-pdf me-2"></i>Generar Reporte</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Tipo de Reporte</label>
+                                            <select class="form-select" id="reportType">
+                                                <option value="appointments">Citas Programadas</option>
+                                                <option value="suppliers">Lista de Proveedores</option>
+                                                <option value="inventory">Inventario (Todas las áreas)</option>
+                                                <option value="lowstock">Stock Bajo (Todas las áreas)</option>
+                                                <option value="payroll">Nómina de Empleados</option>
+                                                <option value="maintenance">Reportes de Mantenimiento</option>
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Desde</label>
+                                                <input type="date" class="form-control" id="reportFromDate">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Hasta</label>
+                                                <input type="date" class="form-control" id="reportToDate">
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-danger w-100" onclick="generatePDFReport()">
+                                            <i class="fas fa-file-pdf me-2"></i>Generar PDF
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Resumen del Sistema</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-md-3">
+                                                <div class="card border-primary">
+                                                    <div class="card-body p-2">
+                                                        <h3 class="text-primary mb-0" id="totalAppointments">0</h3>
+                                                        <small>Citas Totales</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card border-success">
+                                                    <div class="card-body p-2">
+                                                        <h3 class="text-success mb-0" id="totalSuppliers">0</h3>
+                                                        <small>Proveedores</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card border-info">
+                                                    <div class="card-body p-2">
+                                                        <h3 class="text-info mb-0" id="totalProducts">0</h3>
+                                                        <small>Productos</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card border-warning">
+                                                    <div class="card-body p-2">
+                                                        <h3 class="text-warning mb-0" id="lowStockCount">0</h3>
+                                                        <small>Stock Bajo</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="fas fa-calendar-week me-2"></i>Próximas Citas</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="upcomingAppointments"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="tab-pane fade" id="admin-tools" role="tabpanel" aria-labelledby="admin-tools-tab">
+                    <div class="container-fluid pt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card shadow-sm">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Gestión de Usuarios</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Administrar las contraseñas de las cuentas de acceso al sistema.</p>
+                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#passwordChangeModal">
+                                            <i class="fas fa-key me-2"></i>Cambiar Contraseña de Usuario
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="inventoryModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inventoryModalTitle">Agregar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="inventoryModalForm">
+                        <input type="hidden" id="modalProductId" name="modalProductId">
+                        <input type="hidden" id="modalProductArea" name="modalProductArea">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Producto</label>
+                            <input type="text" class="form-control" id="modalProductName" name="modalProductName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Categoría</label>
+                            <input type="text" class="form-control" id="modalProductCategory" name="modalProductCategory" placeholder="Ej: Licores, Lácteos, Botanas..." required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Stock Actual</label>
+                                <input type="number" class="form-control" id="modalCurrentStock" name="modalCurrentStock" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Stock Mínimo</label>
+                                <input type="number" class="form-control" id="modalMinStock" name="modalMinStock" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Unidad</label>
+                            <select class="form-select" id="modalProductUnit" name="modalProductUnit" required>
+                                <option value="unidades">Unidades</option>
+                                <option value="kg">Kilogramos</option>
+                                <option value="litros">Litros</option>
+                                <option value="cajas">Cajas</option>
+                                <option value="paquetes">Paquetes</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="inventoryModalForm" class="btn btn-primary">Guardar Producto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="employeeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="employeeModalTitle">Agregar Empleado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="employeeModalForm">
+                        <input type="hidden" id="modalEmployeeId">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="modalEmployeeName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Puesto</label>
+                            <input type="text" class="form-control" id="modalEmployeePosition" placeholder="Ej: Taquilla, Gerente, Staff..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Horas Trabajadas (Mensuales)</label>
+                            <input type="number" class="form-control" id="modalEmployeeHours" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="employeeModalForm" class="btn btn-primary">Guardar Empleado</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalTitle"><i class="fas fa-check-circle me-2"></i>¡Éxito!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <p class="lead" id="successModalBody">La operación se completó correctamente.</p>
+                </div>
+                <div class="modal-footer justify-content-center border-0">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmationModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="confirmationModalTitle"><i class="fas fa-exclamation-triangle me-2"></i>Confirmar Acción</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <p class="lead" id="confirmationModalBody">¿Está seguro de que desea realizar esta acción?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmActionButton">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="passwordChangeModal" tabindex="-1" aria-labelledby="passwordChangeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordChangeModalLabel"><i class="fas fa-key me-2"></i>Cambiar Contraseña</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="passwordChangeForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="passwordUserSelect" class="form-label">Usuario</label>
+                            <select id="passwordUserSelect" class="form-select" required>
+                                </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="newPassword" required minlength="6">
+                            <small class="text-muted">Mínimo 6 caracteres.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="confirmPassword" required minlength="6">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Actualizar Contraseña</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
